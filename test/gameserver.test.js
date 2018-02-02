@@ -53,4 +53,55 @@ describe("gameserver", function() {
     });
 
   });
+
+  describe("serving games", function (done) {
+    before(function(done) {
+      gameserver.start(done);
+    });
+
+    after(function(done) {
+      gameserver.shutdown(done);
+    });
+
+    it("allows registering to a game and get a slot", function(done) {
+      request.post("http://localhost:" + PORT + "/v1/rooms", function(err, response, body) {
+        data = JSON.parse(body);
+        assert.equal(data["roomId"], 1000);
+        assert.equal(data["playerId"], 0);
+        done();
+      });
+    });
+
+    it("allows another player to join the same game", function(done) {
+      request.post("http://localhost:" + PORT + "/v1/rooms", function(err, response, body) {
+        data = JSON.parse(body);
+        assert.equal(data["roomId"], 1000);
+        assert.equal(data["playerId"], 1);
+        done();
+      });
+    });
+
+    it("allows to send a played turn to the server", function(done) {
+      request.put({
+        uri: "http://localhost:" + PORT + "/v1/rooms/1000/players/0/turn",
+        body: "complexpayload"}, function(err, response, body) {
+        data = JSON.parse(body);
+
+        assert.equal(data["roomId"], 1000);
+        assert.equal(data["playerId"], 0);
+        assert.equal(data["turnId"], 1);
+        assert.equal(data["currentTurnPlayerId"], 1);
+        done();
+      });
+    });
+
+    it("allows to get a played turn from the server", function(done) {
+      request.get("http://localhost:" + PORT + "/v1/rooms/1000/players/0/turn/1", function(err, response, body) {
+        assert.equal(body, "complexpayload");
+        done();
+      });
+    });
+
+
+  });
 });

@@ -18,16 +18,16 @@ describe("gamelogic", function() {
 			var gamelogic = new Gamelogic(123);
 			assert.ok(gamelogic.hasEmptySlots());
 
-			gamelogic.register(function (err, reply) {
+			gamelogic.register(function (err, roomId, playerId) {
 				assert.equal(err, null);
-				assert.equal(reply["playerId"], 0);
-				assert.equal(reply["roomId"], 123);
+				assert.equal(playerId, 0);
+				assert.equal(roomId, 123);
 
 				assert.ok(gamelogic.hasEmptySlots());
 
-				gamelogic.register(function (err, reply) {
+				gamelogic.register(function (err, roomId, playerId) {
 					assert.equal(err, null);
-					assert.equal(reply["playerId"], 1);
+					assert.equal(playerId, 1);
 					assert.ok(!gamelogic.hasEmptySlots());
 
 					done();
@@ -53,7 +53,7 @@ describe("gamelogic", function() {
 			gamelogic.turn(0, "complexdata", function (err, reply) {
 				assert.equal(reply["playerId"], 0);
 				assert.equal(reply["turnId"], 1);
-				assert.equal(reply["currentPlayerTurnId"], 1);
+				assert.equal(reply["currentTurnPlayerId"], 1);
 				done();
 			});
 		});
@@ -76,12 +76,12 @@ describe("gamelogic", function() {
 			});
 		});
 
-		it("next turn will have next turn id and another currentPlayerTurnId", function (done) {
+		it("next turn will have next turn id and another currentTurnPlayerId", function (done) {
 
 			gamelogic.turn(1, "complexdata", function (err, reply) {
 				assert.equal(reply["playerId"], 1);
 				assert.equal(reply["turnId"], 2);
-				assert.equal(reply["currentPlayerTurnId"], 0);
+				assert.equal(reply["currentTurnPlayerId"], 0);
 				done();
 			});
 		});		

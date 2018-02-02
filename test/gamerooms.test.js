@@ -17,7 +17,7 @@ describe("gamerooms", function() {
 	};
 
 	Mock.prototype.register = function(cb) {
-		cb(null, this.players++);
+		cb(null, this.id, this.players++);
 	};	
 
 	describe("findRoomWithSlot", function() {
