@@ -97,7 +97,8 @@ describe("gameserver", function() {
 
     it("allows to get a played turn from the server", function(done) {
       request.get("http://localhost:" + PORT + "/v1/rooms/1000/players/0/turn/1", function(err, response, body) {
-        assert.equal(body, "complexpayload");
+        var data = JSON.parse(body);
+        assert.equal(data["data"], "complexpayload");
         done();
       });
     });

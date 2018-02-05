@@ -50,7 +50,8 @@ describe("gamelogic", function() {
 
 		it("can accept data blob for a turn", function (done) {
 
-			gamelogic.turn(0, "complexdata", function (err, reply) {
+			gamelogic.turn(0, "complexdata", function (err, playedTurnNumber, reply) {
+				assert.equal(playedTurnNumber, 1);
 				assert.equal(reply["playerId"], 0);
 				assert.equal(reply["turnId"], 1);
 				assert.equal(reply["currentTurnPlayerId"], 1);
@@ -60,7 +61,7 @@ describe("gamelogic", function() {
 
 		it("can read the turn data back", function (done) {
 			gamelogic.getTurn(1, function (err, data) {
-				assert.equal(data, "complexdata");
+				assert.equal(data["data"], "complexdata");
 				done();
 			});
 		});
@@ -78,7 +79,7 @@ describe("gamelogic", function() {
 
 		it("next turn will have next turn id and another currentTurnPlayerId", function (done) {
 
-			gamelogic.turn(1, "complexdata", function (err, reply) {
+			gamelogic.turn(1, "complexdata", function (err, playedTurnNumber, reply) {
 				assert.equal(reply["playerId"], 1);
 				assert.equal(reply["turnId"], 2);
 				assert.equal(reply["currentTurnPlayerId"], 0);
